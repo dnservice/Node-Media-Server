@@ -26,6 +26,10 @@ const relayRoute = require('./api/routes/relay');
 
 class NodeHttpServer {
   constructor(config) {
+    if(config.disable)
+    {
+      return;
+    }
     this.port = config.http.port || HTTP_PORT;
     this.mediaroot = config.http.mediaroot || HTTP_MEDIAROOT;
     this.config = config;
