@@ -26,7 +26,7 @@ const relayRoute = require('./api/routes/relay');
 
 class NodeHttpServer {
   constructor(config) {
-    if(config.disable)
+    if(config.http.disable)
     {
       return;
     }
@@ -92,6 +92,10 @@ class NodeHttpServer {
   }
 
   run() {
+    if(config.http.disable)
+    {
+      return;
+    }
     this.httpServer.listen(this.port, () => {
       Logger.log(`Node Media Http Server started on port: ${this.port}`);
     });
@@ -163,6 +167,10 @@ class NodeHttpServer {
   }
 
   stop() {
+    if(config.http.disable)
+    {
+      return;
+    }
     this.httpServer.close();
     if (this.httpsServer) {
       this.httpsServer.close();
