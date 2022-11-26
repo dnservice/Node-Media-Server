@@ -26,14 +26,14 @@ const relayRoute = require('./api/routes/relay');
 
 class NodeHttpServer {
   constructor(config) {
+   
+    this.port = config.http.port || HTTP_PORT;
+    this.mediaroot = config.http.mediaroot || HTTP_MEDIAROOT;
+    this.config = config;
     if(config.http.disable)
     {
       return;
     }
-    this.port = config.http.port || HTTP_PORT;
-    this.mediaroot = config.http.mediaroot || HTTP_MEDIAROOT;
-    this.config = config;
-
     let app = Express();
     app.use(bodyParser.json());
 
@@ -92,7 +92,7 @@ class NodeHttpServer {
   }
 
   run() {
-    if(config.http.disable)
+    if(this.config.http.disable)
     {
       return;
     }
@@ -167,7 +167,7 @@ class NodeHttpServer {
   }
 
   stop() {
-    if(config.http.disable)
+    if(this.config.http.disable)
     {
       return;
     }
