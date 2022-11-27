@@ -21,7 +21,7 @@ class NodeFissionSession extends EventEmitter {
       if (!!m.vf) {
         x264 = x264.concat(['-r', m.vf]);
       }
-      let aac = !!m.ab ? ['-c:a', 'aac', '-b:a', m.ab] : ['-c:a', "copy"];
+      let aac = ['-c:a', 'aac', '-b:a', m.ab];
       let outPath = ['-f', 'flv', 'rtmp://127.0.0.1:' + this.conf.rtmpPort + '/' + this.conf.streamApp + '/' + this.conf.streamName + '_' + (m.name || m.vs.split('x')[1])];
       argv.splice(argv.length, 0, ...x264);
       argv.splice(argv.length, 0, ...aac);
