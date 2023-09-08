@@ -66,7 +66,8 @@ class NodeTransSession extends EventEmitter {
     }
     mkdirp.sync(ouPath);
     let argv = ['-y', '-i', inPath];
-    console.log(this.conf.vcParam)
+    Logger.log('[Config] ' + JSON.stringify(this.conf.vcParam));
+
     Array.prototype.push.apply(argv, ['-c:v', vc]);
     Array.prototype.push.apply(argv, this.conf.vcParam);
     Array.prototype.push.apply(argv, ['-c:a', ac]);
