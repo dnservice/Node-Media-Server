@@ -184,7 +184,7 @@ class NodeRelayServer {
     }
   }
 
-  onPostPublish(id, streamPath, args) {
+  onPostPublish(id, streamPath, args,count = 0) {
     if (!this.config.relay.tasks) {
       return;
     }
@@ -207,6 +207,10 @@ class NodeRelayServer {
         session.id = id;
         session.on('end', (id) => {
           this.dynamicSessions.delete(id);
+          if(count==0 && session.hasError)
+          {
+            onPostPublish(id,streamPath,args,count+1);
+          }
         });
         this.dynamicSessions.set(id, session);
         session.run();

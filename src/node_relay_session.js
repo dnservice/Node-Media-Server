@@ -18,6 +18,7 @@ class NodeRelaySession extends EventEmitter {
     this.id = NodeCoreUtils.generateNewSessionID();
     this.ts = Date.now() / 1000 | 0;
     this.TAG = 'relay';
+    this.hasError = false;
   }
 
   run() {
@@ -40,6 +41,7 @@ class NodeRelaySession extends EventEmitter {
     this.ffmpeg_exec = spawn(this.conf.ffmpeg, argv);
     this.ffmpeg_exec.on('error', (e) => {
       Logger.ffdebug(e);
+      this.hasError = true;
     });
 
     this.ffmpeg_exec.stdout.on('data', (data) => {
