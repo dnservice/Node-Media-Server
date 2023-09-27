@@ -203,14 +203,27 @@ class NodeRelayServer {
           conf.ouPath += '?';
           conf.ouPath += querystring.encode(args);
         }
-        let session = new NodeRelaySession(conf);
-        session.id = id;
-        session.on('end', (id) => {
-          this.dynamicSessions.delete(id);
-        });
-        this.dynamicSessions.set(id, session);
-        session.run();
-        Logger.log('[relay dynamic push] start id=' + id, conf.inPath, 'to', conf.ouPath);
+        function createSession(conf_copy)
+        {
+          let session = new NodeRelaySession(conf_copy);
+          session.id = id;
+          session.on('end', (id) => {
+            this.dynamicSessions.delete(id);
+            if(session.hasError && session.retryCount==0)
+            {
+              Logger.log('[relay dynamic push retry] start id=' + id, conf_copy.inPath, 'to', conf_copy.ouPath);
+              let retryCount = session.retryCount;
+              session = createSession(conf_copy);
+              session.retryCount = retryCount+1;
+            }
+          });
+          this.dynamicSessions.set(id, session);
+          session.run();
+          Logger.log('[relay dynamic push] start id=' + id, conf_copy.inPath, 'to', conf_copy.ouPath);
+          return session;
+        }
+        createSession(conf);
+     
       }
     }
 

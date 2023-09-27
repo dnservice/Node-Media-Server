@@ -18,11 +18,13 @@ class NodeRelaySession extends EventEmitter {
     this.id = NodeCoreUtils.generateNewSessionID();
     this.ts = Date.now() / 1000 | 0;
     this.TAG = 'relay';
+    this.hasError = false;
+    this.retryCount = 0;
   }
 
   run() {
     let format = this.conf.ouPath.startsWith('rtsp://') ? 'rtsp' : 'flv';
-    let argv = ['-re', '-i', this.conf.inPath, '-c', 'copy', '-f', format, this.conf.ouPath];
+    let argv = ['','-re', '-i', this.conf.inPath, '-c', 'copy', '-f', format, this.conf.ouPath];
     if (this.conf.inPath[0] === '/' || this.conf.inPath[1] === ':') {
       argv.unshift('-1');
       argv.unshift('-stream_loop');
@@ -40,6 +42,7 @@ class NodeRelaySession extends EventEmitter {
     this.ffmpeg_exec = spawn(this.conf.ffmpeg, argv);
     this.ffmpeg_exec.on('error', (e) => {
       Logger.ffdebug(e);
+      this.hasError = true;
     });
 
     this.ffmpeg_exec.stdout.on('data', (data) => {
