@@ -184,7 +184,7 @@ class NodeRelayServer {
     }
   }
 
-  onPostPublish(id, streamPath, args,count = 0) {
+  onPostPublish(id, streamPath, args) {
     if (!this.config.relay.tasks) {
       return;
     }
@@ -205,20 +205,12 @@ class NodeRelayServer {
         }
         let session = new NodeRelaySession(conf);
         session.id = id;
-        session.retryCount = count;
         session.on('end', (id) => {
           this.dynamicSessions.delete(id);
-          if(session.hasError && session.retryCount==0)
-          {
-            Logger.log('[relay dynamic push retry] start id=' + id, conf.inPath, 'to', conf.ouPath);
-            onPostPublish(id,streamPath,args,1);
-
-          }
         });
         this.dynamicSessions.set(id, session);
         session.run();
         Logger.log('[relay dynamic push] start id=' + id, conf.inPath, 'to', conf.ouPath);
-     
       }
     }
 
