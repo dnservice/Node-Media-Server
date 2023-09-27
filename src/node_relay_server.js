@@ -222,7 +222,7 @@ class NodeRelayServer {
           Logger.log('[relay dynamic push] start id=' + id, conf_copy.inPath, 'to', conf_copy.ouPath);
           return session;
         }
-        createSession(conf);
+        createSession(conf).bind(this);
      
       }
     }
