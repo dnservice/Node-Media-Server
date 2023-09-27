@@ -236,17 +236,17 @@ class NodeRtmpSession {
   }
 
   onSocketClose() {
-    Logger.log('onSocketClose');
+    // Logger.log('onSocketClose');
     this.stop();
   }
 
   onSocketError(e) {
-    Logger.log('onSocketError', e);
+    // Logger.log('onSocketError', e);
     this.stop();
   }
 
   onSocketTimeout() {
-    Logger.log('onSocketTimeout');
+    // Logger.log('onSocketTimeout');
     this.stop();
   }
 
