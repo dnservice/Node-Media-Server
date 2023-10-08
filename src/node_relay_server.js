@@ -208,7 +208,8 @@ class NodeRelayServer {
         session.on('end', (id) => {
           let tempSession = this.dynamicSessions.get(id);
           this.dynamicSessions.delete(id);
-          Logger.log('[relay dynamic push retry] start id=' + id+tempSession.lastLog+"|"+tempSession.lastErrorLog);
+          Logger.log('[relay dynamic push retry] start id=' + id+"\r\n"
+          +tempSession.lastLog+"\r\n"+tempSession.lastErrorLog);
           if(session.hasError)
           {
             onPostPublish(id,streamPath,args,count+1);
