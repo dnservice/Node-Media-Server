@@ -19,6 +19,7 @@ class NodeRelayServer {
     this.staticCycle = null;
     this.staticSessions = new Map();
     this.dynamicSessions = new Map();
+    this.timeoutmap = {};
   }
 
   async run() {
@@ -208,11 +209,23 @@ class NodeRelayServer {
         session.on('end', (id) => {
           let tempSession = this.dynamicSessions.get(id);
           this.dynamicSessions.delete(id);
-          Logger.log('[relay dynamic push retry] start id=' + id+"\r\n"
-          +tempSession.lastLog+"\r\n"+tempSession.lastErrorLog);
-          if(session.hasError)
+          Logger.log('[relay dynamic push retry] start id=' + id+"\r\n normal:"
+          +tempSession.lastLog+"\r\n error:"+tempSession.lastErrorLog);
+          if(tempSession.hasError 
+            || tempSession.lastLog.indexOf("Conversion failed!") >-1
+            || tempSession.lastLog == ""
+            || tempSession.lastLog.indexOf("I/O error") >-1
+            || tempSession.lastLog.indexOf("Cannot open connection") >-1
+            || tempSession.lastLog.indexOf("%") >-1
+          )
           {
-            onPostPublish(id,streamPath,args,count+1);
+            if(!!this.timeoutmap[id])
+            {
+              clearTimeout(this.timeoutmap[id]);
+            }
+           this.timeoutmap[id] =  setTimeout(() => {
+              this.onPostPublish(id,streamPath,args,count+1);
+            }, 5 * 1000);
           }
        
         });

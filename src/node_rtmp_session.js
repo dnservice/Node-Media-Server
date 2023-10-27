@@ -1129,6 +1129,8 @@ class NodeRtmpSession {
     }
 
     if (context.publishers.has(this.publishStreamPath)) {
+      
+      console.log(context.publishers)
       this.reject();
       Logger.log(`[rtmp publish] Already has a stream. id=${this.id} streamPath=${this.publishStreamPath} streamId=${this.publishStreamId}`);
       this.sendStatusMessage(this.publishStreamId, 'error', 'NetStream.Publish.BadName', 'Stream already publishing');
