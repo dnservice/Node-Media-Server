@@ -1130,7 +1130,7 @@ class NodeRtmpSession {
 
     if (context.publishers.has(this.publishStreamPath)) {
       let publisherSession = this.sessions.get(
-        this.publishers.get(publishStreamPath)
+        context.publishers.get(publishStreamPath)
       );
       publisherSession.stop();
 
